@@ -7,11 +7,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.widget.GridView;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.apache.http.Header;
+
+import java.util.ArrayList;
 
 import codepath.com.googleimagesearch.R;
+import codepath.com.googleimagesearch.adapters.SearchResultAdapter;
+import codepath.com.googleimagesearch.helpers.GoogleImageSearchClient;
+import codepath.com.googleimagesearch.models.SearchResult;
 
 
 public class SearchResultsActivity extends ActionBarActivity {
+
+    ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +32,8 @@ public class SearchResultsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search_results);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        GridView gridView = (GridView) findViewById(R.id.results_grid);
+        gridView.setAdapter(new SearchResultAdapter(this, searchResults));
     }
 
 
@@ -31,6 +46,19 @@ public class SearchResultsActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
+                GoogleImageSearchClient.get(params, new AsyncHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                    }
+                });
                 return false;
             }
 
