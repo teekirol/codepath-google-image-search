@@ -1,5 +1,6 @@
 package codepath.com.googleimagesearch.activities;
 
+import android.content.Intent;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,9 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -35,12 +37,27 @@ public class SearchResultsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        gridView = (GridView) findViewById(R.id.results_grid);
+        setupViews();
+
         ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
         adapter = new SearchResultAdapter(this, searchResults);
         gridView.setAdapter(adapter);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    private void setupViews() {
+        gridView = (GridView) findViewById(R.id.results_grid);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SearchResult sr = adapter.getItem(position);
+                Intent i = new Intent(SearchResultsActivity.this, ImageDisplayActivity.class);
+                i.putExtra("url", sr.getUrl());
+                startActivity(i);
+            }
+        });
     }
 
 
