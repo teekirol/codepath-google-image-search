@@ -59,7 +59,6 @@ public class SearchResultsActivity extends ActionBarActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            System.out.println(response);
                             JSONObject responseData = response.getJSONObject("responseData");
                             JSONArray resultsList = responseData.getJSONArray("results");
                             ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
