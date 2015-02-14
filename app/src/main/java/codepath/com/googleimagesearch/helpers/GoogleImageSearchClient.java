@@ -19,6 +19,7 @@ public class GoogleImageSearchClient {
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void get(RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        params.add(PROTOCOL_VERSION_PARAM_NAME, PROTOCOL_VERSION_PARAM_VALUE);
         client.get(BASE_URL, params, responseHandler);
     }
 

@@ -10,9 +10,13 @@ import android.support.v7.widget.SearchView;
 import android.widget.GridView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,7 +28,8 @@ import codepath.com.googleimagesearch.models.SearchResult;
 
 public class SearchResultsActivity extends ActionBarActivity {
 
-    ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
+    private GridView gridView;
+    private SearchResultAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +37,10 @@ public class SearchResultsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search_results);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        GridView gridView = (GridView) findViewById(R.id.results_grid);
-        gridView.setAdapter(new SearchResultAdapter(this, searchResults));
+        gridView = (GridView) findViewById(R.id.results_grid);
+        ArrayList<SearchResult> searchResults = new ArrayList<SearchResult>();
+        adapter = new SearchResultAdapter(this, searchResults);
+        gridView.setAdapter(adapter);
     }
 
 
@@ -47,19 +54,24 @@ public class SearchResultsActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
-                GoogleImageSearchClient.get(params, new AsyncHttpResponseHandler() {
+                GoogleImageSearchClient.get(params, new JsonHttpResponseHandler() {
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            System.out.println(response);
+                            JSONObject responseData = response.getJSONObject("responseData");
+                            JSONArray resultsList = responseData.getJSONArray("results");
+                            ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
+                            adapter.addAll(searchResultsList);
+                            adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-                    }
                 });
-                return false;
+                return true;
             }
 
             @Override
