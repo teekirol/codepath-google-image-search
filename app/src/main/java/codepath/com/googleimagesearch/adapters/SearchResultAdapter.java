@@ -1,6 +1,7 @@
 package codepath.com.googleimagesearch.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class SearchResultAdapter extends ArrayAdapter<SearchResult> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Picasso.with(getContext()).load(sr.getThumbUrl()).into(viewHolder.thumb);
-        viewHolder.title.setText(sr.getTitle());
+        viewHolder.title.setText(Html.fromHtml(sr.getTitle()));
 
         return convertView;
     }

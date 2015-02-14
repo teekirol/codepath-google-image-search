@@ -62,6 +62,7 @@ public class SearchResultsActivity extends ActionBarActivity {
                             JSONObject responseData = response.getJSONObject("responseData");
                             JSONArray resultsList = responseData.getJSONArray("results");
                             ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
+                            adapter.clear();
                             adapter.addAll(searchResultsList);
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {

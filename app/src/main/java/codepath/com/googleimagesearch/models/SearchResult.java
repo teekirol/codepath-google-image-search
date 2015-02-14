@@ -15,7 +15,7 @@ public class SearchResult {
     public static SearchResult fromJson(JSONObject json) {
         SearchResult sr = new SearchResult();
         try {
-            sr.title = json.getString("titleNoFormatting");
+            sr.title = json.getString("title");
             sr.thumbUrl = json.getString("tbUrl");
             sr.url = json.getString("url");
         } catch (JSONException e) {
