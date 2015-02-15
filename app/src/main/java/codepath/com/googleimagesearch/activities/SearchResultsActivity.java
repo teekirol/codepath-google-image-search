@@ -12,21 +12,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-
 import codepath.com.googleimagesearch.R;
 import codepath.com.googleimagesearch.SearchFiltersActivity;
 import codepath.com.googleimagesearch.adapters.SearchResultAdapter;
 import codepath.com.googleimagesearch.helpers.GoogleImageSearchClient;
+import codepath.com.googleimagesearch.models.Filter;
 import codepath.com.googleimagesearch.models.SearchResult;
 
 
@@ -132,10 +129,8 @@ public class SearchResultsActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SearchFiltersActivity.class);
-            i.putExtra(SearchFiltersActivity.SIZE, filterSize);
-            i.putExtra(SearchFiltersActivity.COLOR, filterColor);
-            i.putExtra(SearchFiltersActivity.TYPE, filterType);
-            i.putExtra(SearchFiltersActivity.SITE, filterSite);
+            Filter f = new Filter(filterSize, filterColor, filterType, filterSite);
+            i.putExtra("filter", f);
             setResult(SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK, i);
             startActivityForResult(i, SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK);
             return true;
@@ -147,10 +142,11 @@ public class SearchResultsActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
-            this.filterSize = data.getStringExtra(SearchFiltersActivity.SIZE);
-            this.filterColor = data.getStringExtra(SearchFiltersActivity.COLOR);
-            this.filterType = data.getStringExtra(SearchFiltersActivity.TYPE);
-            this.filterSite = data.getStringExtra(SearchFiltersActivity.SITE);
+            Filter f = data.getParcelableExtra("filter");
+            this.filterSize = f.getSize();
+            this.filterColor = f.getColor();
+            this.filterType = f.getType();
+            this.filterSite = f.getSite();
             executeSearch();
         }
     }

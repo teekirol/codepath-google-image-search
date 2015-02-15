@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import codepath.com.googleimagesearch.models.Filter;
 
 
 public class SearchFiltersActivity extends ActionBarActivity {
@@ -21,11 +20,6 @@ public class SearchFiltersActivity extends ActionBarActivity {
     private Spinner typeSpinner;
     private EditText etSite;
     private Button btnSave;
-
-    public static String SIZE = "size";
-    public static String COLOR = "color";
-    public static String TYPE = "type";
-    public static String SITE = "site";
 
     public static int SEARCH_FILTERS_RESULT_OK = 200;
 
@@ -37,45 +31,45 @@ public class SearchFiltersActivity extends ActionBarActivity {
         setupViews();
     }
 
-    // TODO Use serializeable
     private void setupViews() {
         Intent i = getIntent();
+        Filter f = i.getParcelableExtra("filter");
 
         sizeSpinner = (Spinner) findViewById(R.id.spinnerSize);
-        System.out.println(i.getStringExtra(SIZE));
-        if(i.getStringExtra(SIZE) != null) {
-            setSpinnerToValue(sizeSpinner, i.getStringExtra(SIZE));
+        if(f.getSize() != null) {
+            setSpinnerToValue(sizeSpinner, f.getSize());
         } else {
             setSpinnerToValue(sizeSpinner, "");
         }
 
         colorSpinner = (Spinner) findViewById(R.id.spinnerColor);
-        if(i.getStringExtra(COLOR) != null) {
-            setSpinnerToValue(colorSpinner, i.getStringExtra(COLOR));
+        if(f.getColor() != null) {
+            setSpinnerToValue(colorSpinner, f.getColor());
         } else {
             setSpinnerToValue(colorSpinner, "");
         }
 
         typeSpinner = (Spinner) findViewById(R.id.spinnerType);
-        if(i.getStringExtra(TYPE) != null) {
-            setSpinnerToValue(typeSpinner, i.getStringExtra(TYPE));
+        if(f.getType() != null) {
+            setSpinnerToValue(typeSpinner, f.getType());
         } else {
             setSpinnerToValue(typeSpinner, "");
         }
 
         etSite = (EditText) findViewById(R.id.etSite);
-        etSite.setText(i.getStringExtra(SITE));
+        etSite.setText(f.getSite());
 
         btnSave = (Button) findViewById(R.id.btnSave);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Filter f = new Filter(sizeSpinner.getSelectedItem().toString(),
+                        colorSpinner.getSelectedItem().toString(),
+                        typeSpinner.getSelectedItem().toString(),
+                        etSite.getText().toString());
                 Intent i = new Intent();
-                i.putExtra(SIZE, sizeSpinner.getSelectedItem().toString());
-                i.putExtra(COLOR, colorSpinner.getSelectedItem().toString());
-                i.putExtra(TYPE, typeSpinner.getSelectedItem().toString());
-                i.putExtra(SITE, etSite.getText().toString());
+                i.putExtra("filter", f);
                 setResult(SEARCH_FILTERS_RESULT_OK, i);
                 finish();
             }
