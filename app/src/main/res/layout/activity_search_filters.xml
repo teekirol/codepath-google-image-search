@@ -1,0 +1,97 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="codepath.com.googleimagesearch.SearchFiltersActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvFiltersTitle"
+        android:text="@string/search_filter_title"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1">
+
+        <TableRow android:layout_marginBottom="20dp">
+            <TextView
+                android:id="@+id/labelSize"
+                android:text="@string/size_label"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+            <Spinner
+                android:id="@+id/spinnerSize"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/sizes"/>
+        </TableRow>
+        <TableRow android:layout_marginBottom="20dp">
+            <TextView
+                android:id="@+id/labelColor"
+                android:text="@string/color_label"
+                android:layout_below="@id/labelSize"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+            <Spinner
+                android:id="@+id/spinnerColor"
+                android:layout_toRightOf="@id/labelColor"
+                android:layout_alignTop="@id/labelColor"
+                android:layout_alignBottom="@id/labelColor"
+                android:layout_below="@id/labelSize"
+                android:entries="@array/colors"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </TableRow>
+        <TableRow android:layout_marginBottom="20dp">
+            <TextView
+                android:id="@+id/labelType"
+                android:text="@string/type_label"
+                android:layout_below="@id/labelColor"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+            <Spinner
+                android:id="@+id/spinnerType"
+                android:layout_toRightOf="@id/labelType"
+                android:layout_alignBottom="@id/labelType"
+                android:layout_alignTop="@id/labelType"
+                android:layout_below="@id/labelColor"
+                android:layout_width="wrap_content"
+                android:entries="@array/type"
+                android:layout_height="wrap_content" />
+        </TableRow>
+        <TableRow android:layout_marginBottom="20dp">
+            <TextView
+                android:id="@+id/labelSite"
+                android:layout_below="@id/labelType"
+                android:text="@string/site_label"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" />
+            <EditText
+                android:id="@+id/etSite"
+                android:inputType="textUri"
+                android:layout_alignTop="@id/labelSite"
+                android:layout_alignBottom="@id/labelSite"
+                android:layout_below="@id/spinnerType"
+                android:layout_toRightOf="@id/labelSite"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </TableRow>
+    </TableLayout>
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Save"/>
+</LinearLayout>

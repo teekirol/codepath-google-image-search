@@ -11,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import codepath.com.googleimagesearch.R;
+import codepath.com.googleimagesearch.SearchFiltersActivity;
 import codepath.com.googleimagesearch.adapters.SearchResultAdapter;
 import codepath.com.googleimagesearch.helpers.GoogleImageSearchClient;
 import codepath.com.googleimagesearch.models.SearchResult;
@@ -108,9 +110,18 @@ public class SearchResultsActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, SearchFiltersActivity.class);
+            startActivityForResult(i, SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
+            Toast.makeText(this, "sdfdsfds", Toast.LENGTH_SHORT).show();
+        }
     }
 }
