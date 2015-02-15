@@ -19,9 +19,11 @@ public class GoogleImageSearchClient {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
+    // TODO load more than 8 images
     public static void get(RequestParams params, AsyncHttpResponseHandler responseHandler) {
         params.add(PROTOCOL_VERSION_PARAM_NAME, PROTOCOL_VERSION_PARAM_VALUE);
         params.add(RESULTS_PER_PAGE_PARAM_NAME, "8");
+        System.out.println(BASE_URL + "?" + params.toString());
         client.get(BASE_URL, params, responseHandler);
     }
 

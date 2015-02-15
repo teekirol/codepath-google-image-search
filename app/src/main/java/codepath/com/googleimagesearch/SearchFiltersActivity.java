@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 
 public class SearchFiltersActivity extends ActionBarActivity {
@@ -34,14 +35,37 @@ public class SearchFiltersActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_filters);
         setupViews();
-
     }
 
+    // TODO Use serializeable
     private void setupViews() {
+        Intent i = getIntent();
+
         sizeSpinner = (Spinner) findViewById(R.id.spinnerSize);
+        System.out.println(i.getStringExtra(SIZE));
+        if(i.getStringExtra(SIZE) != null) {
+            setSpinnerToValue(sizeSpinner, i.getStringExtra(SIZE));
+        } else {
+            setSpinnerToValue(sizeSpinner, "");
+        }
+
         colorSpinner = (Spinner) findViewById(R.id.spinnerColor);
+        if(i.getStringExtra(COLOR) != null) {
+            setSpinnerToValue(colorSpinner, i.getStringExtra(COLOR));
+        } else {
+            setSpinnerToValue(colorSpinner, "");
+        }
+
         typeSpinner = (Spinner) findViewById(R.id.spinnerType);
+        if(i.getStringExtra(TYPE) != null) {
+            setSpinnerToValue(typeSpinner, i.getStringExtra(TYPE));
+        } else {
+            setSpinnerToValue(typeSpinner, "");
+        }
+
         etSite = (EditText) findViewById(R.id.etSite);
+        etSite.setText(i.getStringExtra(SITE));
+
         btnSave = (Button) findViewById(R.id.btnSave);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -51,11 +75,24 @@ public class SearchFiltersActivity extends ActionBarActivity {
                 i.putExtra(SIZE, sizeSpinner.getSelectedItem().toString());
                 i.putExtra(COLOR, colorSpinner.getSelectedItem().toString());
                 i.putExtra(TYPE, typeSpinner.getSelectedItem().toString());
+                i.putExtra(SITE, etSite.getText().toString());
                 setResult(SEARCH_FILTERS_RESULT_OK, i);
                 finish();
             }
         });
 
+    }
+
+    private void setSpinnerToValue(Spinner sp, String value) {
+        int index = 0;
+        SpinnerAdapter adapter = sp.getAdapter();
+        for(int i = 0; i < adapter.getCount(); i++) {
+            if(adapter.getItem(i).equals(value)) {
+                index = i;
+                break;
+            }
+        }
+        sp.setSelection(index);
     }
 
 

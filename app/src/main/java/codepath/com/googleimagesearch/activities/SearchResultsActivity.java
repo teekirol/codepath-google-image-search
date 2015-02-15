@@ -35,10 +35,11 @@ public class SearchResultsActivity extends ActionBarActivity {
     private GridView gridView;
     private SearchResultAdapter adapter;
 
-    private String filterSize;
-    private String filterColor;
-    private String filterType;
-    private String filterSite;
+    private String query = "";
+    private String filterSize = "";
+    private String filterColor = "";
+    private String filterType = "";
+    private String filterSite = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,30 +77,10 @@ public class SearchResultsActivity extends ActionBarActivity {
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
-                params.add(GoogleImageSearchClient.SIZE_PARAM_NAME, filterSize);
-                params.add(GoogleImageSearchClient.TYPE_PARAM_NAME, filterType);
-                params.add(GoogleImageSearchClient.COLOR_FILTER_PARAM_NAME, filterColor);
-                params.add(GoogleImageSearchClient.SITE_FILTER_PARAM_NAME, filterSite);
-
-                GoogleImageSearchClient.get(params, new JsonHttpResponseHandler() {
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            JSONObject responseData = response.getJSONObject("responseData");
-                            JSONArray resultsList = responseData.getJSONArray("results");
-                            ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
-                            adapter.clear();
-                            adapter.addAll(searchResultsList);
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
+            public boolean onQueryTextSubmit(String q) {
+                query = q;
+                Toast.makeText(getApplicationContext(), "Searching...", Toast.LENGTH_SHORT).show();
+                executeSearch();
                 return true;
             }
 
@@ -109,6 +90,36 @@ public class SearchResultsActivity extends ActionBarActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void executeSearch() {
+
+        RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
+        params.add(GoogleImageSearchClient.SIZE_PARAM_NAME, filterSize);
+        params.add(GoogleImageSearchClient.TYPE_PARAM_NAME, filterType);
+        params.add(GoogleImageSearchClient.COLOR_FILTER_PARAM_NAME, filterColor);
+        params.add(GoogleImageSearchClient.SITE_FILTER_PARAM_NAME, filterSite);
+
+        GoogleImageSearchClient.get(params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    JSONObject responseData = response.getJSONObject("responseData");
+                    JSONArray resultsList = responseData.getJSONArray("results");
+                    ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
+                    adapter.clear();
+                    adapter.addAll(searchResultsList);
+                    adapter.notifyDataSetChanged();
+                    if(searchResultsList.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "No results", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
     }
 
     @Override
@@ -121,6 +132,11 @@ public class SearchResultsActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(this, SearchFiltersActivity.class);
+            i.putExtra(SearchFiltersActivity.SIZE, filterSize);
+            i.putExtra(SearchFiltersActivity.COLOR, filterColor);
+            i.putExtra(SearchFiltersActivity.TYPE, filterType);
+            i.putExtra(SearchFiltersActivity.SITE, filterSite);
+            setResult(SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK, i);
             startActivityForResult(i, SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK);
             return true;
         }
@@ -131,10 +147,11 @@ public class SearchResultsActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
-            this.filterSize = data.getExtras().getString(SearchFiltersActivity.SIZE);
-            this.filterColor = data.getExtras().getString(SearchFiltersActivity.COLOR);
-            this.filterType = data.getExtras().getString(SearchFiltersActivity.TYPE);
-            this.filterSite = data.getExtras().getString(SearchFiltersActivity.SITE);
+            this.filterSize = data.getStringExtra(SearchFiltersActivity.SIZE);
+            this.filterColor = data.getStringExtra(SearchFiltersActivity.COLOR);
+            this.filterType = data.getStringExtra(SearchFiltersActivity.TYPE);
+            this.filterSite = data.getStringExtra(SearchFiltersActivity.SITE);
+            executeSearch();
         }
     }
 }
