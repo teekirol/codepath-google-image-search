@@ -3,13 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/btnShare"
+        android:text="Share"
+        style="@style/RedButton"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
     <ImageButton
         android:id="@+id/ivImageResult"
+        android:layout_below="@id/btnShare"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:scaleType="center"
         android:adjustViewBounds="true"
