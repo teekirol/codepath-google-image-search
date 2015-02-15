@@ -1,6 +1,9 @@
 package codepath.com.googleimagesearch.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -76,6 +79,12 @@ public class SearchResultsActivity extends ActionBarActivity {
         });
     }
 
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityMgr =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityMgr.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,6 +109,11 @@ public class SearchResultsActivity extends ActionBarActivity {
     }
 
     private void executeSearch() {
+
+        if(!isNetworkAvailable()) {
+            Toast.makeText(getApplicationContext(), "You are not connected to the internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
         params.add(GoogleImageSearchClient.SIZE_PARAM_NAME, filterSize);
