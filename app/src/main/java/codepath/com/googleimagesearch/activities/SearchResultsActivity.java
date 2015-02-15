@@ -141,7 +141,7 @@ public class SearchResultsActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
+        if(resultCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK && requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
             Filter f = data.getParcelableExtra("filter");
             this.filterSize = f.getSize();
             this.filterColor = f.getColor();
