@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v7.widget.SearchView;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import codepath.com.googleimagesearch.R;
 import codepath.com.googleimagesearch.SearchFiltersActivity;
 import codepath.com.googleimagesearch.adapters.SearchResultAdapter;
+import codepath.com.googleimagesearch.helpers.EndlessScrollListener;
 import codepath.com.googleimagesearch.helpers.GoogleImageSearchClient;
 import codepath.com.googleimagesearch.models.Filter;
 import codepath.com.googleimagesearch.models.SearchResult;
@@ -37,6 +39,8 @@ public class SearchResultsActivity extends ActionBarActivity {
     private String filterColor = "";
     private String filterType = "";
     private String filterSite = "";
+
+    private int searchResultsCursor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,13 @@ public class SearchResultsActivity extends ActionBarActivity {
                 startActivity(i);
             }
         });
+        gridView.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                searchResultsCursor = totalItemsCount;
+                executeSearch();
+            }
+        });
     }
 
 
@@ -76,8 +87,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String q) {
                 query = q;
-                Toast.makeText(getApplicationContext(), "Searching...", Toast.LENGTH_SHORT).show();
-                executeSearch();
+                performNewSearch();
                 return true;
             }
 
@@ -86,7 +96,7 @@ public class SearchResultsActivity extends ActionBarActivity {
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     private void executeSearch() {
@@ -96,21 +106,23 @@ public class SearchResultsActivity extends ActionBarActivity {
         params.add(GoogleImageSearchClient.TYPE_PARAM_NAME, filterType);
         params.add(GoogleImageSearchClient.COLOR_FILTER_PARAM_NAME, filterColor);
         params.add(GoogleImageSearchClient.SITE_FILTER_PARAM_NAME, filterSite);
+        params.add(GoogleImageSearchClient.START_PARAM_NAME, String.valueOf(searchResultsCursor));
 
         GoogleImageSearchClient.get(params, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    JSONObject responseData = response.getJSONObject("responseData");
-                    JSONArray resultsList = responseData.getJSONArray("results");
-                    ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
-                    adapter.clear();
-                    adapter.addAll(searchResultsList);
-                    adapter.notifyDataSetChanged();
-                    if(searchResultsList.isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "No results", Toast.LENGTH_SHORT).show();
+                    JSONObject responseData = response.optJSONObject("responseData");
+                    if(responseData != null) {
+                        JSONArray resultsList = responseData.getJSONArray("results");
+                        ArrayList<SearchResult> searchResultsList = SearchResult.fromJson(resultsList);
+                        adapter.addAll(searchResultsList);
+                        if(adapter.isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "No results", Toast.LENGTH_SHORT).show();
+                        }
                     }
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -139,15 +151,23 @@ public class SearchResultsActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void performNewSearch() {
+        searchResultsCursor = 0;
+        adapter.clear();
+        adapter.notifyDataSetChanged();
+        executeSearch();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK && requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
+        if(resultCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK &&
+                requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
             Filter f = data.getParcelableExtra("filter");
             this.filterSize = f.getSize();
             this.filterColor = f.getColor();
             this.filterType = f.getType();
             this.filterSite = f.getSite();
-            executeSearch();
+            performNewSearch();
         }
     }
 }

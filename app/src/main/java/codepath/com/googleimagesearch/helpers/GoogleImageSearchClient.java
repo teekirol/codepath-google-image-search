@@ -12,6 +12,7 @@ public class GoogleImageSearchClient {
 
     public static final String QUERY_PARAM_NAME = "q";
     public static final String RESULTS_PER_PAGE_PARAM_NAME = "rsz";
+    public static final String START_PARAM_NAME = "start";
     public static final String SIZE_PARAM_NAME = "imgsz";
     public static final String TYPE_PARAM_NAME = "imgtype";
     public static final String COLOR_FILTER_PARAM_NAME = "imgcolor";
