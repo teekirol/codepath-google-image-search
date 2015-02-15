@@ -5,4 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="OrangeBackground">
+        <item name="android:background">#F2CF78</item>
+    </style>
+
+    <style name="RedButton">
+        <item name="android:background">#F06C60</item>
+    </style>
+
 </resources>
