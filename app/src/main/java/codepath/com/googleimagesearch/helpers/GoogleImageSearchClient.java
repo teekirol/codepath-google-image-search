@@ -13,9 +13,9 @@ public class GoogleImageSearchClient {
     public static final String QUERY_PARAM_NAME = "q";
     public static final String RESULTS_PER_PAGE_PARAM_NAME = "rsz";
     public static final String SIZE_PARAM_NAME = "imgsz";
-    private static final String TYPE_PARAM_NAME = "imgtype";
-    private static final String COLOR_FILTER_PARAM_NAME = "imgcolor";
-    private static final String SITE_FILTER_PARAM_NAME = "as_sitesearch";
+    public static final String TYPE_PARAM_NAME = "imgtype";
+    public static final String COLOR_FILTER_PARAM_NAME = "imgcolor";
+    public static final String SITE_FILTER_PARAM_NAME = "as_sitesearch";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 

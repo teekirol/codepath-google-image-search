@@ -35,6 +35,11 @@ public class SearchResultsActivity extends ActionBarActivity {
     private GridView gridView;
     private SearchResultAdapter adapter;
 
+    private String filterSize;
+    private String filterColor;
+    private String filterType;
+    private String filterSite;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +78,11 @@ public class SearchResultsActivity extends ActionBarActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 RequestParams params = new RequestParams(GoogleImageSearchClient.QUERY_PARAM_NAME, query);
+                params.add(GoogleImageSearchClient.SIZE_PARAM_NAME, filterSize);
+                params.add(GoogleImageSearchClient.TYPE_PARAM_NAME, filterType);
+                params.add(GoogleImageSearchClient.COLOR_FILTER_PARAM_NAME, filterColor);
+                params.add(GoogleImageSearchClient.SITE_FILTER_PARAM_NAME, filterSite);
+
                 GoogleImageSearchClient.get(params, new JsonHttpResponseHandler() {
 
                     @Override
@@ -121,7 +131,10 @@ public class SearchResultsActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == SearchFiltersActivity.SEARCH_FILTERS_RESULT_OK) {
-            Toast.makeText(this, "sdfdsfds", Toast.LENGTH_SHORT).show();
+            this.filterSize = data.getExtras().getString(SearchFiltersActivity.SIZE);
+            this.filterColor = data.getExtras().getString(SearchFiltersActivity.COLOR);
+            this.filterType = data.getExtras().getString(SearchFiltersActivity.TYPE);
+            this.filterSite = data.getExtras().getString(SearchFiltersActivity.SITE);
         }
     }
 }
