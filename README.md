@@ -19,4 +19,4 @@ Completed user stories:
 
 Walkthrough of all user stories:
 
-![Video walkthrough](http://i.imgur.com/jbtGkCH.gif)
+[Video walkthrough](http://i.imgur.com/jbtGkCH.gif)
