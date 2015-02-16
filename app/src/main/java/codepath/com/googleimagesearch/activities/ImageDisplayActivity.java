@@ -34,6 +34,7 @@ public class ImageDisplayActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_display);
+        Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT).show();
         setupViews();
      }
 
