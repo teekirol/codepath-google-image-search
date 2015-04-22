@@ -16,6 +16,9 @@ Completed user stories:
 * [x] Advanced: Use the ActionBar SearchView or custom layout as the query box instead of an EditText
 * [x] Advanced: User can share an image to their friends or email it to themselves
 * [x] Advanced: Improve the user interface and experiment with image assets and/or styling and coloring
+* [ ] Advanced: Replace Filter Settings Activity with a lightweight modal overlay
+* [ ] Bonus: Use the StaggeredGridView to display improve the grid of image results
+* [ ] Bonus: User can zoom or pan images displayed in full-screen detail view
 
 Walkthrough of all user stories:
 
